@@ -4,8 +4,8 @@ Currently in two scripts so modifications to plots can be made (incl. updates wi
 
 1. Parsing script
 For all parks, loops through PRISM data and saves .csv file with annual ppt and tmean.
-*currently parses through 800m monthly data, modify to use Annie's script to get 4k from web
+*currently parses through 800m monthly data, modify to use Annie's script to get 4k from web*
 
 2. Plotting script
 Loops through park PRISM files and creates two gifs illustrating historical climate trends.
-*currently only full figure, need to add simplified figure
+*currently only full figure, need to add simplified figure*

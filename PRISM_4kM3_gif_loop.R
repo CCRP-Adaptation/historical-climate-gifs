@@ -26,7 +26,8 @@ Centroids<-read.csv("2020nps_boundary_centroids/NPS_Centroid_Test2.csv",header=T
 PptDir <- ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/ppt/")
 TmeanDir <-  ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/tmean/")
 
-for (i in 2:nrow(Centroids)){
+# for (i in 1:nrow(Centroids)){
+for (i in 1:1){
   PARK <- Centroids$SiteID[i]  # Park ID
   LongPARK <- Centroids$Name[i] # Create column for long name 
   #set work directory - where all datasets are located
@@ -91,25 +92,26 @@ for (i in 2:nrow(Centroids)){
       geom_density_ridges(scale = 10, size = 0.25, rel_min_height = 0.01,aes(fill=Color1)) +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
             panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-            axis.text=element_text(size=18), axis.title = element_text(size=18),legend.position="none") +
+            axis.text=element_text(size=18), axis.title = element_text(size=18),legend.position="none",
+            axis.title.x = element_text(margin = margin(t = -4, r = 0, b = 0, l = 0))) +
       xlab(expression(paste("Annual average temperature ("~degree~F,")"))) +
       ylab("") +
       scale_x_continuous(limits=c(min(Clim1$Tmean), max(Clim1$Tmean))) +
       scale_y_reverse(expand = c(0,0),breaks=c(2000, 1980, 1960, 1940, 1920, 1900)) +
       scale_fill_manual(name=" ",values = Colorramp)
     
-    
     precip<-ggplot(Clim3, aes(x=PptIn,y=decade,group=decade)) + 
       geom_density_ridges(scale = 10, size = 0.25, rel_min_height = 0.03,aes(fill=Color1)) +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
             panel.background = element_blank(), axis.line = element_line(colour = "black"), 
             axis.text = element_text(angle=270, size = 18), 
-            axis.title.y.left = element_text(angle=270, size=18),legend.position="none") +
+            axis.title.y.left = element_text(angle=270, size=18,margin = margin(t = -4, r = 0, b = 0, l = 0)),legend.position="none") +
       xlab("Annual precipitation (in)") + ylab("") +
       scale_x_continuous(limits=c(min(Clim1$PptIn), max(Clim1$PptIn))) +
       scale_y_reverse(expand = c(0,0),breaks=c(2000, 1980, 1960, 1940, 1920, 1900)) +
       coord_flip() +
       scale_fill_manual(name=" ",values = Colorramp)
+    precip
     
     setwd("C:/Users/achildress/Documents/Data_Visualization/2020_Test/gifs/")
     
@@ -134,7 +136,7 @@ for (i in 2:nrow(Centroids)){
     annotate_figure(gg,top=text_grob(title, 
                                      color="black", face="bold", size=20),
                     bottom = text_grob("Data source: PRISM Climate Group
-                                   Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
+                                   Prepared by: HD.Vincelette, AN.Runyon, GW.Schuurman", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 10))
     
     ggsave(plot=gg,file=paste(PARK,"_",Year,"2.tiff",sep=""), width = 11, height = 11)

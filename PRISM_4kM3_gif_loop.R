@@ -124,7 +124,7 @@ for (i in 2:nrow(Centroids)){
                                    Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 10))
     
-    ggsave(plot=gg2, file=paste(PARK,"_",Year,"-BASIC.jpg",sep=""), width = 11, height = 11)
+    ggsave(plot=gg2, file=paste(PARK,"_",Year,"-BASIC1.tiff",sep=""), width = 11, height = 11)
     
     gg<-ggarrange(temp, NULL, ggplot, precip, 
                   ncol = 2, nrow = 2,  align = "hv", 
@@ -137,13 +137,13 @@ for (i in 2:nrow(Centroids)){
                                    Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 10))
     
-    ggsave(plot=gg,file=paste(PARK,"_",Year,".tiff",sep=""), width = 11, height = 11)
+    ggsave(plot=gg,file=paste(PARK,"_",Year,"2.tiff",sep=""), width = 11, height = 11)
     
   }
   
   for (i in 1:40){
-     ggsave(plot=gg2,file=paste(PARK,"_",Year,"_",i,"-BASIC.jpg",sep=""), width = 11, height = 11)
-     ggsave(plot=gg,file=paste(PARK,"_",Year,"_",i,".tiff",sep=""), width = 11, height = 11)
+     ggsave(plot=gg2,file=paste(PARK,"_",Year,"_",i,"-BASIC1.tiff",sep=""), width = 11, height = 11)
+     ggsave(plot=gg,file=paste(PARK,"_",Year,"_",i,"2.tiff",sep=""), width = 11, height = 11)
   }
   ggsave(plot=gg2,file=paste(PARK,"-BASIC.png",sep=""), width = 11, height = 11)
   ggsave(plot=gg,file=paste(PARK,".png",sep=""), width = 11, height = 11)
@@ -151,17 +151,17 @@ for (i in 2:nrow(Centroids)){
   ## Creating animation
   
   # https://www.rforge.net/doc/packages/animation/saveGIF.
-  shell("convert -delay 20 *.tiff PARK.gif")
+  shell("convert -delay 20 *2.tiff PARK.gif")
   file.rename("PARK.gif", paste(PARK,".gif"))
   
   dev.off()
-  file.remove(list.files(pattern=".tiff"))
+  file.remove(list.files(pattern="2.tiff"))
   
-  shell("convert -delay 20 *.jpg PARK-BASIC.gif")
-  file.rename("PARK-BASIC.jpg", paste(PARK,"-BASIC.gif"))
+  shell("convert -delay 20 *1.tiff PARK-BASIC.gif")
+  file.rename("PARK-BASIC.gif", paste(PARK,"-BASIC.gif"))
   
   dev.off()
-  file.remove(list.files(pattern=".jpg"))
+  file.remove(list.files(pattern="1.tiff"))
 }
 
 # ---------- Future line plot additions --------------

@@ -2,6 +2,7 @@
 
 
 library(raster)
+library(prism)
 library(ggplot2)
 library(plyr)
 library(lubridate)
@@ -22,13 +23,28 @@ Colorramp<-c('#f7f7f7','#d9d9d9','#bdbdbd','#969696','#636363','#252525','red')
 
 setwd("C:/Users/achildress/Documents/Data_Visualization/2020_Test/")
 Centroids<-read.csv("2020nps_boundary_centroids/NPS_Centroid_Test2.csv",header=T)
+PptDir <- ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/ppt/")
+TmeanDir <-  ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/tmean/")
 
 for (i in 2:nrow(Centroids)){
   PARK <- Centroids$SiteID[i]  # Park ID
   LongPARK <- Centroids$Name[i] # Create column for long name 
   #set work directory - where all datasets are located
-  SiteDir<-paste("C:/Users/achildress/Documents/Data_Visualization/Visualization-HV/Visualization/PARKs/",PARK,sep="")
-  setwd(SiteDir)
+  Lat <- Centroids$Lat[i]
+  Lon <- Centroids$Lon[i]
+  
+  # Parse data for park
+  options(prism.path = PptDir)
+  ppt <- prism_slice(c(Lon,Lat),ls_prism_data()[,1]) #plots slice of data from single location from list of prism files
+  ppt2<-prism$data
+  rownames(ppt2)<-NULL
+  colnames(ppt2)<-ppt$labels
+  
+  options(prism.path = TmeanDir)
+  tmean <- prism_slice(c(Lon,Lat),ls_prism_data()[,1]) 
+  tmean2<-prism$data
+  rownames(tmean2)<-NULL
+  colnames(tmean2)<-tmean$labels
   
   #read the .csv with the climate data
   PPT<-read.csv(paste0(PARK,'_PptMeans.csv'),header=TRUE)

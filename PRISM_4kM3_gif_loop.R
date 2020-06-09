@@ -36,52 +36,41 @@ for (i in 2:nrow(Centroids)){
   # Parse data for park
   options(prism.path = PptDir)
   ppt <- prism_slice(c(Lon,Lat),ls_prism_data()[,1]) #plots slice of data from single location from list of prism files
-  ppt2<-prism$data
+  ppt2<-ppt$data
   rownames(ppt2)<-NULL
   colnames(ppt2)<-ppt$labels
+  ppt2$PptIn <- ppt2[,1]/25.4
+  ppt2$Year <- format(ppt2$Date,format="%Y")
   
   options(prism.path = TmeanDir)
   tmean <- prism_slice(c(Lon,Lat),ls_prism_data()[,1]) 
-  tmean2<-prism$data
+  tmean2<-tmean$data
   rownames(tmean2)<-NULL
   colnames(tmean2)<-tmean$labels
+  tmean2$Tmean <- (tmean2[,1] * 9/5) +32
+  tmean2$Year <- format(tmean2$Date,format="%Y")
   
-  #read the .csv with the climate data
-  PPT<-read.csv(paste0(PARK,'_PptMeans.csv'),header=TRUE)
-  Tmax<-read.csv(paste0(PARK,'_TmaxMeans.csv'),header=TRUE)
-  Tmin<-read.csv(paste0(PARK,'_TminMeans.csv'),header=TRUE)
-  
-  Clim1<-data.frame(PPT$Date,PPT$PptIn,Tmax$TmaxF,Tmin$TminF)
-  Clim1$Tmean<-rowMeans(Clim1[,c("Tmax.TmaxF","Tmin.TminF")],na.rm=TRUE)
-  
-  Clim1$PPT.Date<-as.Date(Clim1$PPT.Date)
-  Clim1$Year<-format(Clim1$PPT.Date,format="%Y")
-  
-  #Create new data frame to aggregate yearly temp and precip
-  Clim2<-data.frame(aggregate(PPT.PptIn~Year,Clim1,mean))
-  names(Clim2)[names(Clim2)=="PPT.PptIn"]<-"Ppt"
-  Clim2$Tmean<-aggregate(Tmean~Year,Clim1,mean);Clim2$Tmean<-Clim2$Tmean[,2]
-  
+  Clim1<-merge(ppt2[,c("Year","Date","PptIn")],tmean2[,c("Year","Date","Tmean")],by=c("Year","Date"))
   
   #### Set colors for every 20 years -- adjust this and color ramp to be whatever want
-  Clim2$Color1<-"1895-1900"
-  Clim2$Color1[Clim2$Year >= 1900] <-"1901-1920"
-  Clim2$Color1[Clim2$Year >= 1920] <-"1921-1940"
-  Clim2$Color1[Clim2$Year >= 1940] <-"1941-1960"
-  Clim2$Color1[Clim2$Year >= 1960] <-"1961-1980"
-  Clim2$Color1[Clim2$Year >= 1980] <-"1981-2000"
-  Clim2$Color1[Clim2$Year >= 2000] <-"2001-2017"
+  Clim1$Color1<-"1895-1900"
+  Clim1$Color1[Clim1$Year >= 1900] <-"1901-1920"
+  Clim1$Color1[Clim1$Year >= 1920] <-"1921-1940"
+  Clim1$Color1[Clim1$Year >= 1940] <-"1941-1960"
+  Clim1$Color1[Clim1$Year >= 1960] <-"1961-1980"
+  Clim1$Color1[Clim1$Year >= 1980] <-"1981-2000"
+  Clim1$Color1[Clim1$Year >= 2000] <-"2001-2017"
   
-  Clim2$Color1<-as.factor(Clim2$Color1)
+  Clim1$Color1<-as.factor(Clim1$Color1)
   
-  for (i in 1:nrow(Clim2)){
-    Clim3<-Clim2[1:i,]
+  for (i in 1:nrow(Clim1)){
+    Clim3<-Clim1[1:i,]
     Year<-Clim3$Year[i]
     print(paste(Year,PARK,sep=" "))
-    ggplot<-ggplot(Clim3, aes(Tmean, Ppt,xmin=min(Clim2$Tmean),xmax=max(Clim2$Tmean),ymin=(min(Clim2$Ppt)),ymax=max(Clim2$Ppt))) +
+    ggplot<-ggplot(Clim3, aes(Tmean, PptIn,xmin=min(Clim1$Tmean),xmax=max(Clim1$Tmean),ymin=(min(Clim1$PptIn)),ymax=max(Clim1$PptIn))) +
       geom_point(shape=21,colour="black",aes(fill=Color1),size=4) +
       geom_point(shape=21,size=4,colour="black") +
-      annotate(geom="text", x=max(Clim2$Tmean), y=max(Clim2$Ppt), label=Year, color="black",size=8,hjust=1) +
+      annotate(geom="text", x=max(Clim1$Tmean), y=max(Clim1$Ppt), label=Year, color="black",size=8,hjust=1) +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
             panel.background = element_blank(), axis.line = element_line(colour = "black"),
             axis.text=element_text(size=18),axis.title.x=element_text(size=18,vjust=-0.2),
@@ -92,8 +81,8 @@ for (i in 2:nrow(Centroids)){
            y = "Annual precipitation (in)") + 
       scale_color_manual(name=" ", values=Colorramp) +
       scale_fill_manual(name=" ",values = Colorramp) +
-      geom_hline(aes(yintercept=mean(Clim2$Ppt[which(Clim2$Year>=1900 | Clim2$Year<2000)])),linetype=2,colour="black") +
-      geom_vline(aes(xintercept=mean(Clim2$Tmean[which(Clim2$Year>=1900 | Clim2$Year<2000)])),linetype=2,colour="black") +
+      geom_hline(aes(yintercept=mean(Clim1$Ppt[which(Clim1$Year>=1900 | Clim1$Year<2000)])),linetype=2,colour="black") +
+      geom_vline(aes(xintercept=mean(Clim1$Tmean[which(Clim1$Year>=1900 | Clim1$Year<2000)])),linetype=2,colour="black") +
       border()
     
     Clim3$Year<-as.numeric(Clim3$Year)
@@ -105,32 +94,35 @@ for (i in 2:nrow(Centroids)){
             axis.text=element_text(size=18), axis.title = element_text(size=18),legend.position="none") +
       xlab(expression(paste("Annual average temperature ("~degree~F,")"))) +
       ylab("") +
-      scale_x_continuous(limits=c(min(Clim2$Tmean), max(Clim2$Tmean))) +
+      scale_x_continuous(limits=c(min(Clim1$Tmean), max(Clim1$Tmean))) +
       scale_y_reverse(expand = c(0,0),breaks=c(2000, 1980, 1960, 1940, 1920, 1900)) +
       scale_fill_manual(name=" ",values = Colorramp)
     
     
-    precip<-ggplot(Clim3, aes(x=Ppt,y=decade,group=decade)) + 
+    precip<-ggplot(Clim3, aes(x=PptIn,y=decade,group=decade)) + 
       geom_density_ridges(scale = 10, size = 0.25, rel_min_height = 0.03,aes(fill=Color1)) +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
             panel.background = element_blank(), axis.line = element_line(colour = "black"), 
             axis.text = element_text(angle=270, size = 18), 
             axis.title.y.left = element_text(angle=270, size=18),legend.position="none") +
       xlab("Annual precipitation (in)") + ylab("") +
-      scale_x_continuous(limits=c(min(Clim2$Ppt), max(Clim2$Ppt))) +
+      scale_x_continuous(limits=c(min(Clim1$PptIn), max(Clim1$PptIn))) +
       scale_y_reverse(expand = c(0,0),breaks=c(2000, 1980, 1960, 1940, 1920, 1900)) +
       coord_flip() +
       scale_fill_manual(name=" ",values = Colorramp)
     
-    setwd("C:/Users/achildress/Documents/Data_Visualization/Visualization-HV/Visualization/gifs/")
+    setwd("C:/Users/achildress/Documents/Data_Visualization/2020_Test/gifs/")
     
     gg<-ggarrange(temp, NULL, ggplot, precip, 
                   ncol = 2, nrow = 2,  align = "hv", 
                   widths = c(3, 2), heights = c(2, 3),
                   common.legend = TRUE,legend="right") 
-    title<-paste(LongPARK, "Climate (1895-2017)")
+    title<-paste(LongPARK, "Climate (1895-2018)")
     annotate_figure(gg,top=text_grob(title, 
-                                     color="black", face="bold", size=20))
+                                     color="black", face="bold", size=20),
+                    bottom = text_grob("Data source: PRISM Climate Group
+                                   Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
+                                       hjust = 1, x = 1, face = "italic", size = 10))
     
     ggsave(paste(PARK,"_",Year,".tiff",sep=""), width = 11, height = 11)
   }

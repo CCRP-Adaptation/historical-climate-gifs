@@ -59,7 +59,7 @@ for (i in 2:nrow(Centroids)){
   Clim1$Color1[Clim1$Year >= 1940] <-"1941-1960"
   Clim1$Color1[Clim1$Year >= 1960] <-"1961-1980"
   Clim1$Color1[Clim1$Year >= 1980] <-"1981-2000"
-  Clim1$Color1[Clim1$Year >= 2000] <-"2001-2017"
+  Clim1$Color1[Clim1$Year >= 2000] <-"2001-2018"
   
   Clim1$Color1<-as.factor(Clim1$Color1)
   
@@ -113,6 +113,19 @@ for (i in 2:nrow(Centroids)){
     
     setwd("C:/Users/achildress/Documents/Data_Visualization/2020_Test/gifs/")
     
+    gg2<-ggarrange(ggplot,
+                   ncol = 1, nrow = 1,  align = "hv", 
+                   widths = c(2, 1), heights = c(1, 2),
+                   common.legend = TRUE,legend="right") 
+    title<-paste(LongPARK, "Climate (1895-2018)")
+    annotate_figure(gg2,top=text_grob(title, 
+                                      color="black", face="bold", size=20),
+                    bottom = text_grob("Data source: PRISM Climate Group
+                                   Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
+                                       hjust = 1, x = 1, face = "italic", size = 10))
+    
+    ggsave(plot=gg2, file=paste(PARK,"_",Year,"-BASIC.jpg",sep=""), width = 11, height = 11)
+    
     gg<-ggarrange(temp, NULL, ggplot, precip, 
                   ncol = 2, nrow = 2,  align = "hv", 
                   widths = c(3, 2), heights = c(2, 3),
@@ -124,12 +137,16 @@ for (i in 2:nrow(Centroids)){
                                    Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 10))
     
-    ggsave(paste(PARK,"_",Year,".tiff",sep=""), width = 11, height = 11)
+    ggsave(plot=gg,file=paste(PARK,"_",Year,".tiff",sep=""), width = 11, height = 11)
+    
   }
+  
   for (i in 1:40){
-    ggsave(paste(PARK,"_",Year,"_",i,".tiff",sep=""), width = 11, height = 11)
+     ggsave(plot=gg2,file=paste(PARK,"_",Year,"_",i,"-BASIC.jpg",sep=""), width = 11, height = 11)
+     ggsave(plot=gg,file=paste(PARK,"_",Year,"_",i,".tiff",sep=""), width = 11, height = 11)
   }
-  ggsave(paste(PARK,".png",sep=""), width = 11, height = 11)
+  ggsave(plot=gg2,file=paste(PARK,"-BASIC.png",sep=""), width = 11, height = 11)
+  ggsave(plot=gg,file=paste(PARK,".png",sep=""), width = 11, height = 11)
   
   ## Creating animation
   
@@ -139,5 +156,28 @@ for (i in 2:nrow(Centroids)){
   
   dev.off()
   file.remove(list.files(pattern=".tiff"))
+  
+  shell("convert -delay 20 *.jpg PARK-BASIC.gif")
+  file.rename("PARK-BASIC.jpg", paste(PARK,"-BASIC.gif"))
+  
+  dev.off()
+  file.remove(list.files(pattern=".jpg"))
 }
+
+# ---------- Future line plot additions --------------
+# Clim3
+# 
+# c <- ggplot(data=Clim3) + geom_point(aes(Year,)) +
+#   geom_line(aes(Year,Tmean)) 
+# c <- c + geom_smooth(method=lm, data=Clim3,aes(Year,Tmean),na.rm=TRUE,level=.99)
+# c <- c + geom_smooth(method=lm, data=Clim3[which(Clim3$Year >=1970),],aes(Year,Tmean),na.rm=TRUE)
+# c
+# 
+# d <- ggplot(data=Clim3) + geom_point(aes(Year,PptIn)) +
+#   geom_line(aes(Year,PptIn)) 
+# d <- d + geom_smooth(method=lm, data=Clim3,aes(Year,PptIn),na.rm=TRUE,level=.99)
+# d <- d + geom_smooth(method=lm, data=Clim3[which(Clim3$Year >=1970),],aes(Year,PptIn),na.rm=TRUE)
+# d
+
+
 

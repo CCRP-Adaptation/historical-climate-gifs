@@ -26,8 +26,8 @@ Centroids<-read.csv("2020nps_boundary_centroids/NPS_Centroid_Test2.csv",header=T
 PptDir <- ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/ppt/")
 TmeanDir <-  ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/tmean/")
 
-# for (i in 1:nrow(Centroids)){
-for (i in 1:1){
+for (i in 1:nrow(Centroids)){
+# for (i in 1:1){
   PARK <- Centroids$SiteID[i]  # Park ID
   LongPARK <- Centroids$Name[i] # Create column for long name 
   #set work directory - where all datasets are located
@@ -64,8 +64,8 @@ for (i in 1:1){
   
   Clim1$Color1<-as.factor(Clim1$Color1)
   
-  # for (i in 1:nrow(Clim1)){
-  for (i in 1:10){
+  for (i in 1:nrow(Clim1)){
+  # for (i in 1:10){
     Clim3<-Clim1[1:i,]
     Year<-Clim3$Year[i]
     print(paste(Year,PARK,sep=" "))

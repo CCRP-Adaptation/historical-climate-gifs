@@ -64,7 +64,8 @@ for (i in 1:1){
   
   Clim1$Color1<-as.factor(Clim1$Color1)
   
-  for (i in 1:nrow(Clim1)){
+  # for (i in 1:nrow(Clim1)){
+  for (i in 1:10){
     Clim3<-Clim1[1:i,]
     Year<-Clim3$Year[i]
     print(paste(Year,PARK,sep=" "))
@@ -111,16 +112,16 @@ for (i in 1:1){
       scale_y_reverse(expand = c(0,0),breaks=c(2000, 1980, 1960, 1940, 1920, 1900)) +
       coord_flip() +
       scale_fill_manual(name=" ",values = Colorramp)
-    precip
     
     setwd("C:/Users/achildress/Documents/Data_Visualization/2020_Test/gifs/")
     
+    title<-paste(LongPARK, "Climate (1895-2018)")
     gg2<-ggarrange(ggplot,
                    ncol = 1, nrow = 1,  align = "hv", 
                    widths = c(2, 1), heights = c(1, 2),
                    common.legend = TRUE,legend="right") 
-    title<-paste(LongPARK, "Climate (1895-2018)")
-    annotate_figure(gg2,top=text_grob(title, 
+    
+    gg2 <- annotate_figure(gg2,top=text_grob(title, 
                                       color="black", face="bold", size=20),
                     bottom = text_grob("Data source: PRISM Climate Group
                                    Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
@@ -132,12 +133,13 @@ for (i in 1:1){
                   ncol = 2, nrow = 2,  align = "hv", 
                   widths = c(3, 2), heights = c(2, 3),
                   common.legend = TRUE,legend="right") 
-    title<-paste(LongPARK, "Climate (1895-2018)")
-    annotate_figure(gg,top=text_grob(title, 
+   
+    gg <- annotate_figure(gg,top=text_grob(title, 
                                      color="black", face="bold", size=20),
                     bottom = text_grob("Data source: PRISM Climate Group
                                    Prepared by: HD.Vincelette, AN.Runyon, GW.Schuurman", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 10))
+    gg
     
     ggsave(plot=gg,file=paste(PARK,"_",Year,"2.tiff",sep=""), width = 11, height = 11)
     
@@ -156,14 +158,11 @@ for (i in 1:1){
   shell("convert -delay 20 *2.tiff PARK.gif")
   file.rename("PARK.gif", paste(PARK,".gif"))
   
-  dev.off()
-  file.remove(list.files(pattern="2.tiff"))
-  
   shell("convert -delay 20 *1.tiff PARK-BASIC.gif")
   file.rename("PARK-BASIC.gif", paste(PARK,"-BASIC.gif"))
   
   dev.off()
-  file.remove(list.files(pattern="1.tiff"))
+  file.remove(list.files(pattern=".tiff"))
 }
 
 # ---------- Future line plot additions --------------

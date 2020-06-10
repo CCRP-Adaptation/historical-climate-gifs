@@ -26,8 +26,8 @@ Centroids<-read.csv("2020nps_boundary_centroids/NPS_Centroid_Test2.csv",header=T
 PptDir <- ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/ppt/")
 TmeanDir <-  ("C:/Users/achildress/Documents/Data_Visualization/2020_Test/PRISM_Extract/tmean/")
 
-# for (i in 1:nrow(Centroids)){
-for (i in 1:1){
+for (i in 1:nrow(Centroids)){
+# for (i in 1:1){ # turn on for troubleshooting
   PARK <- Centroids$SiteID[i]  # Park ID
   LongPARK <- Centroids$Name[i] # Create column for long name 
   #set work directory - where all datasets are located
@@ -64,8 +64,8 @@ for (i in 1:1){
   
   Clim1$Color1<-as.factor(Clim1$Color1)
   
-  # for (i in 1:nrow(Clim1)){
-  for (i in 1:10){
+  for (i in 1:nrow(Clim1)){
+  # for (i in 1:10){ # turn on for troubleshooting
     Clim3<-Clim1[1:i,]
     Year<-Clim3$Year[i]
     print(paste(Year,PARK,sep=" "))
@@ -125,7 +125,7 @@ for (i in 1:1){
     gg2 <- annotate_figure(gg2,top=text_grob(title, 
                                       color="black", face="bold", size=20),
                     bottom = text_grob("Data source: PRISM Climate Group
-                                   Prepared by: H.D.Vincelette & A.N.Runyon", color = "blue",
+                                   Prepared by: HD.Vincelette, AN.Runyon, GW.Schuurman", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 10))
     
     ggsave(plot=gg2, file=paste(PARK,"_",Year,"-BASIC1.tiff",sep=""), width = 11, height = 11)
@@ -146,8 +146,8 @@ for (i in 1:1){
     
   }
   
-  # for (i in 1:40){
-  for (i in 1:5){
+  for (i in 1:40){
+  # for (i in 1:5){ # turn on for troubleshooting
      ggsave(plot=gg2,file=paste(PARK,"_",Year,"_",i,"-BASIC1.tiff",sep=""), width = 11, height = 11)
      ggsave(plot=gg,file=paste(PARK,"_",Year,"_",i,"2.tiff",sep=""), width = 11, height = 11)
   }
@@ -164,7 +164,7 @@ for (i in 1:1){
   file.rename("PARK-BASIC.gif", paste(PARK,"-BASIC.gif"))
   
   dev.off()
-  # file.remove(list.files(pattern=".tiff"))
+  file.remove(list.files(pattern=".tiff"))
 }
 
 # ---------- Future line plot additions --------------

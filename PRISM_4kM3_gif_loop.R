@@ -127,7 +127,7 @@ for (i in 1:1){ # turn on for troubleshooting
                                    Prepared by: HD.Vincelette, AN.Runyon, GW.Schuurman", color = "blue",
                                        hjust = 1, x = 1, face = "italic", size = 14))
     
-    ggsave(plot=gg2, file=paste(PARK,"_",Year,"-BASIC2.png",sep=""), width = 11, height = 11,dpi=72)
+    ggsave(plot=gg2, file=paste(PARK,"_",Year,"-BASIC.png",sep=""), width = 11, height = 11,dpi=72)
     
 
   }
@@ -165,7 +165,7 @@ for (i in 1:1){ # turn on for troubleshooting
   file.rename("PARK-BASIC.gif", paste(PARK,"-BASIC.gif"))
   
   dev.off()
-  file.remove(list.files(pattern="BASIC1.png"))
+  file.remove(list.files(pattern="BASIC2.png"))
 
   #Trend analysis and alt-text output
   

@@ -169,6 +169,7 @@ for (i in 1:1){ # turn on for troubleshooting
 
   #Trend analysis and alt-text output
   
+  
   txt<-file(paste(PARK,"caption.txt",sep="-"))
   writeLines(paste("Climate change is a global phenomenon that manifests differently at local scales. Ongoing climate change is pushing average annual conditions to – and beyond – the extreme edge of historical conditions at many national parks, while temperature and precipitation remained well within the range of historical conditions for other parks. Recent average conditions at", LongPARK,"have [TREND]",sep=" " ),txt)
   close(txt)
